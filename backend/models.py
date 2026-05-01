@@ -1,0 +1,84 @@
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, Date
+from sqlalchemy.orm import relationship
+from database import Base
+
+
+class Plant(Base):
+    __tablename__ = "plants"
+
+    plant_id = Column(Integer, primary_key=True, index=True)
+    plant_name = Column(String, nullable=False)
+    price = Column(Float, nullable=False)
+    category_id = Column(Integer, ForeignKey("categories.category_id"), nullable=False)
+
+    category = relationship("Category", back_populates="plants")
+    sales = relationship("Sales", back_populates="plant")
+    purchases = relationship("Purchases", back_populates="plant")
+    care_requirements = relationship("Care_Requirements", back_populates="plant")
+
+
+class Category(Base):
+    __tablename__ = "categories"
+
+    category_id = Column(Integer, primary_key=True, index=True)
+    category_name = Column(String, nullable=False)
+
+    plants = relationship("Plant", back_populates="category")
+
+
+class Care_Requirements(Base):
+    __tablename__ = "care_requirements"
+
+    care_id = Column(Integer, primary_key=True, index=True)
+    plant_id = Column(Integer, ForeignKey("plants.plant_id"), nullable=False)
+    sunlight_requirement = Column(String, nullable=False)
+    soil_type = Column(String, nullable=False)
+
+    plant = relationship("Plant", back_populates="care_requirements")
+
+
+class Supplier(Base):
+    __tablename__ = "suppliers"
+
+    supplier_id = Column(Integer, primary_key=True, index=True)
+    supplier_name = Column(String, nullable=False)
+    city = Column(String, nullable=False)
+
+    purchases = relationship("Purchases", back_populates="supplier")
+
+
+class Customer(Base):
+    __tablename__ = "customers"
+
+    customer_id = Column(Integer, primary_key=True, index=True)
+    customer_name = Column(String, nullable=False)
+    city = Column(String, nullable=False)
+    phone_number = Column(String, nullable=False)
+
+    sales = relationship("Sales", back_populates="customer")
+
+
+class Purchases(Base):
+    __tablename__ = "purchases"
+
+    purchase_id = Column(Integer, primary_key=True, index=True)
+    plant_id = Column(Integer, ForeignKey("plants.plant_id"), nullable=False)
+    supplier_id = Column(Integer, ForeignKey("suppliers.supplier_id"), nullable=False)
+    quantity_purchased = Column(Integer, nullable=False)
+    purchase_date = Column(Date, nullable=False)
+
+    plant = relationship("Plant", back_populates="purchases")
+    supplier = relationship("Supplier", back_populates="purchases")
+
+
+class Sales(Base):
+    __tablename__ = "sales"
+
+    sale_id = Column(Integer, primary_key=True, index=True)
+    plant_id = Column(Integer, ForeignKey("plants.plant_id"), nullable=False)
+    customer_id = Column(Integer, ForeignKey("customers.customer_id"), nullable=False)
+    quantity_sold = Column(Integer, nullable=False)
+    sale_date = Column(Date, nullable=False)
+
+    plant = relationship("Plant", back_populates="sales")
+    customer = relationship("Customer", back_populates="sales")
