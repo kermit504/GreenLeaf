@@ -2,6 +2,9 @@ from sqlalchemy import Column, Integer, String, Float, ForeignKey, Date
 from sqlalchemy.orm import relationship
 from database import Base
 
+#basically the table equivalent in the database 
+#orm thing uh code - object , database - table and orm is just translates it 
+
 
 class Plant(Base):
     __tablename__ = "plants"
@@ -23,7 +26,7 @@ class Category(Base):
     category_id = Column(Integer, primary_key=True, index=True)
     category_name = Column(String, nullable=False)
 
-    plants = relationship("Plant", back_populates="category")
+    plants = relationship("Plant", back_populates="category") #handles the relationship between category and plant tables ; basically it allows us to access the plants associated with a category through the category object and vice versa
 
 
 class Care_Requirements(Base):

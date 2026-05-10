@@ -8,7 +8,7 @@ class CategoryBase(BaseModel):
 class CategoryCreate(CategoryBase):
     pass
 
-class Category(CategoryBase):
+class CategoryResponse(CategoryBase):
     category_id: int
     class Config:
         from_attributes = True
@@ -24,6 +24,7 @@ class PlantCreate(PlantBase):
 
 class PlantResponse(PlantBase):
     plant_id: int
+    category : CategoryResponse
     class Config:
         from_attributes = True  
 

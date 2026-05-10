@@ -8,6 +8,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
+#connects backend to database and creates a session for each request  and closes it 
 
 def get_db():
     db = SessionLocal()
