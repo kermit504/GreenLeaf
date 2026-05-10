@@ -73,3 +73,28 @@ def create_customer(db: Session , customer : schemas.CustomerCreate) :
 
 def get_customers(db: Session) :
     return db.query(models.Customer).all()
+
+def create_sale(db: Session, sale: schemas.SalesCreate):
+    db_sale = models.Sales(**sale.model_dump())
+    
+    plant = db.query(models.Plant).filter(models.Plant.plant_id == sale.plant_id).first()
+    
+    if plant:
+        plant.stock_quantity -= sale.qty_sold
+    
+    db.add(db_sale)
+    db.commit()
+    db.refresh(db_sale)
+    return db_sale
+
+def create_purchase(db: Session, purchase: schemas.PurchasesCreate):
+    db_purchase = models.Purchases(**purchase.model_dump())
+    
+    plant = db.query(models.Plant).filter(models.Plant.plant_id == purchase.plant_id).first()
+    if plant:
+        plant.stock_quantity += purchase.qty_purchased
+        
+    db.add(db_purchase)
+    db.commit()
+    db.refresh(db_purchase)
+    return db_purchase
