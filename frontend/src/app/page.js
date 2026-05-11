@@ -1,5 +1,5 @@
-import Silk from "../components/Silk";
-import ShinyText from "../components/ShinyText";
+import Silk from "@/components/Silk";
+import ShinyText from "@/components/ShinyText";
 import Link from 'next/link';
 
 export default function Home() {
