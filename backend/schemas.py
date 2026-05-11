@@ -4,6 +4,7 @@ from datetime import date
 
 class CategoryBase(BaseModel):
     category_name: str
+    category_image_url: str
 
 class CategoryCreate(CategoryBase):
     pass
@@ -16,7 +17,8 @@ class CategoryResponse(CategoryBase):
 class PlantBase(BaseModel):
     plant_name: str
     price: float
-
+    plant_image_url: str
+    stock_quantity: int = 0
     category_id: int
 
 class PlantCreate(PlantBase):
@@ -96,9 +98,3 @@ class CustomerResponse(CustomerBase) :
     customer_id : int 
     class Config : 
         from_attributes = True 
-
-
-
-
-
-

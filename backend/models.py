@@ -11,6 +11,8 @@ class Plant(Base):
 
     plant_id = Column(Integer, primary_key=True, index=True)
     plant_name = Column(String, nullable=False)
+    plant_image_url = Column(String, nullable=False)
+    stock_quantity = Column(Integer, default = 0)
     price = Column(Float, nullable=False)
     category_id = Column(Integer, ForeignKey("categories.category_id"), nullable=False)
 
@@ -25,6 +27,7 @@ class Category(Base):
 
     category_id = Column(Integer, primary_key=True, index=True)
     category_name = Column(String, nullable=False)
+    category_image_url = Column(String, nullable = False)
 
     plants = relationship("Plant", back_populates="category") #handles the relationship between category and plant tables ; basically it allows us to access the plants associated with a category through the category object and vice versa
 
@@ -67,7 +70,7 @@ class Purchases(Base):
     purchase_id = Column(Integer, primary_key=True, index=True)
     plant_id = Column(Integer, ForeignKey("plants.plant_id"), nullable=False)
     supplier_id = Column(Integer, ForeignKey("suppliers.supplier_id"), nullable=False)
-    quantity_purchased = Column(Integer, nullable=False)
+    qty_purchased = Column(Integer, nullable=False)
     purchase_date = Column(Date, nullable=False)
 
     plant = relationship("Plant", back_populates="purchases")
@@ -80,7 +83,7 @@ class Sales(Base):
     sale_id = Column(Integer, primary_key=True, index=True)
     plant_id = Column(Integer, ForeignKey("plants.plant_id"), nullable=False)
     customer_id = Column(Integer, ForeignKey("customers.customer_id"), nullable=False)
-    quantity_sold = Column(Integer, nullable=False)
+    qty_sold = Column(Integer, nullable=False)
     sale_date = Column(Date, nullable=False)
 
     plant = relationship("Plant", back_populates="sales")
