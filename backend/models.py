@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, Date
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, Date, Boolean
 from sqlalchemy.orm import relationship
 from database import Base
 
@@ -15,6 +15,7 @@ class Plant(Base):
     stock_quantity = Column(Integer, default = 0)
     price = Column(Float, nullable=False)
     category_id = Column(Integer, ForeignKey("categories.category_id"), nullable=False)
+    supplier_id = Column(Integer, ForeignKey("suppliers.supplier_id"), nullable=False)
 
     category = relationship("Category", back_populates="plants")
     sales = relationship("Sales", back_populates="plant")
@@ -53,15 +54,15 @@ class Supplier(Base):
     purchases = relationship("Purchases", back_populates="supplier")
 
 
-class Customer(Base):
-    __tablename__ = "customers"
+class User(Base):
+    __tablename__ = "users"
 
-    customer_id = Column(Integer, primary_key=True, index=True)
-    customer_name = Column(String, nullable=False)
-    city = Column(String, nullable=False)
-    phone_number = Column(String, nullable=False)
+    user_id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, nullable=False)
+    password = Column(String, nullable=False)
+    is_admin = Column(Boolean, default=False)
 
-    sales = relationship("Sales", back_populates="customer")
+    sales = relationship("Sales", back_populates="user")
 
 
 class Purchases(Base):
@@ -82,9 +83,9 @@ class Sales(Base):
 
     sale_id = Column(Integer, primary_key=True, index=True)
     plant_id = Column(Integer, ForeignKey("plants.plant_id"), nullable=False)
-    customer_id = Column(Integer, ForeignKey("customers.customer_id"), nullable=False)
+    customer_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
     qty_sold = Column(Integer, nullable=False)
     sale_date = Column(Date, nullable=False)
 
     plant = relationship("Plant", back_populates="sales")
-    customer = relationship("Customer", back_populates="sales")
+    user = relationship("User", back_populates="sales")

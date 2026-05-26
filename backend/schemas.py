@@ -19,6 +19,7 @@ class PlantBase(BaseModel):
     price: float
     plant_image_url: str
     stock_quantity: int = 0
+    supplier_id: int
     category_id: int
 
 class PlantCreate(PlantBase):
@@ -59,6 +60,17 @@ class SalesResponse(SalesBase) :
     sale_id : int 
     class Config : 
         from_attributes = True
+        
+# the next 2 classes are for checkout (add to cart) logic
+        
+class SaleItem(BaseModel):
+    plant_id: int
+    qty_sold: int
+
+class CheckoutRequest(BaseModel):
+    customer_id: int
+    sale_date: date
+    items: List[SaleItem]
 
 class PurchasesBase(BaseModel) : 
     plant_id : int 
@@ -86,15 +98,14 @@ class SupplierResponse(SupplierBase) :
     class Config : 
         from_attributes = True
 
-class CustomerBase(BaseModel) :
-    customer_name : str 
-    city : str 
-    phone_number : str 
+class UserBase(BaseModel):
+    username: str
+    is_admin: bool = False
 
-class CustomerCreate(CustomerBase) : 
-    pass 
+class UserCreate(UserBase):
+    password: str
 
-class CustomerResponse(CustomerBase) :
-    customer_id : int 
-    class Config : 
+class UserResponse(UserBase):
+    user_id: int
+    class Config:
         from_attributes = True 

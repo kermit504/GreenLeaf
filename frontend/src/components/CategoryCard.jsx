@@ -6,9 +6,9 @@ const CategoryCard = ({ name, imageUrl, varieties }) => {
       className="w-full cursor-pointer group"
       glowColor="160 80 60"
       backgroundColor="#09090b"
-      glowRadius={70} // Increased glow for bigger cards
+      glowRadius={70}
       glowIntensity={1}
-      colors={['#10B981', '#34d399', '#064e3b']}
+      colors={["#10B981", "#34d399", "#064e3b"]}
     >
       <div className="flex flex-col p-5 h-full">
         <div className="relative w-full aspect-video rounded-2xl overflow-hidden mb-6 border border-white/5 bg-zinc-900">
@@ -18,9 +18,11 @@ const CategoryCard = ({ name, imageUrl, varieties }) => {
             className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
           />
 
-          <div className="absolute top-5 right-5 px-4 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-emerald-400 text-xs uppercase font-bold tracking-[0.2em] opacity-0 group-hover:opacity-100 transition-all duration-300">
-            {varieties} Varieties
-          </div>
+          {varieties && (
+            <div className="absolute top-5 right-5 px-4 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-emerald-400 text-xs uppercase font-bold tracking-[0.2em] opacity-0 group-hover:opacity-100 transition-all duration-300">
+              {varieties} Varieties
+            </div>
+          )}
 
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
 
