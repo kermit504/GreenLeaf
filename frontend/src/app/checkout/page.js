@@ -17,7 +17,7 @@ export default function CheckoutPage() {
     const storedUserId = localStorage.getItem("user_id");
     
     const orderData = {
-      customer_id: storedUserId ? parseInt(storedUserId) : 1,
+      user_id: storedUserId ? parseInt(storedUserId) : 1,
       sale_date: new Date().toISOString().split("T")[0],
       items: cart.map((item) => ({
         plant_id: parseInt(item.plant_id),

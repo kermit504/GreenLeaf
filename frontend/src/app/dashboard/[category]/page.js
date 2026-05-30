@@ -68,6 +68,7 @@ export default async function CategoryPlantsPage({ params }) {
                   price={plant.price}
                   stock_quantity={plant.stock_quantity}
                   plant_image_url={plant.plant_image_url}
+                  care_requirements={plant.care_requirements} // <-- FIXED: Added this line to pass down care data
                 />
               </div>
             ))}

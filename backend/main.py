@@ -83,3 +83,27 @@ def login(details: dict, db: Session = Depends(get_db)):
         "username": user.username, 
         "is_admin": user.is_admin
     }
+    
+@app.get("/suppliers/")
+def get_suppliers(db: Session = Depends(get_db)):
+  return crud.get_suppliers(db = db)
+
+@app.post("/suppliers/")
+def create_supplier(supplier: schemas.SupplierCreate, db: Session = Depends(get_db)):
+  return crud.create_supplier(db = db, supplier = supplier)
+
+@app.get("/checkout/", response_model=list[schemas.SalesResponse])
+def get_all_sales(db: Session = Depends(get_db)):
+  return db.query(models.Sales).all()
+
+@app.put("/plants/{plant_id}", response_model=schemas.PlantResponse)
+def update_plant(plant_id: int, plant: schemas.PlantCreate, db: Session = Depends(get_db)):
+    return crud.update_plant(db=db, plant_id=plant_id, plant=plant)
+
+@app.put("/care/{plant_id}", response_model=schemas.CareRequirementsResponse)
+def update_care(plant_id: int, care: schemas.CareRequirementsCreate, db: Session = Depends(get_db)):
+    return crud.update_care_requirements(db=db, plant_id=plant_id, care=care)
+  
+@app.put("/categories/{category_id}", response_model=schemas.CategoryResponse)
+def update_category(category_id: int, category: schemas.CategoryCreate, db: Session = Depends(get_db)):
+    return crud.update_category(db=db, category_id=category_id, category=category)

@@ -28,6 +28,7 @@ class PlantCreate(PlantBase):
 class PlantResponse(PlantBase):
     plant_id: int
     category : CategoryResponse
+    care_requirements: List[CareRequirementsResponse] = []
     class Config:
         from_attributes = True  
 
@@ -43,12 +44,13 @@ class CareRequirementsCreate(CareRequirementsBase):
 
 class CareRequirementsResponse(CareRequirementsBase):
     care_id : int 
+    plant_id : int
     class Config:
         from_attributes = True
 
 class SalesBase(BaseModel) : 
     plant_id : int 
-    customer_id : int 
+    user_id : int 
     qty_sold : int
     sale_date : date 
 
@@ -68,7 +70,7 @@ class SaleItem(BaseModel):
     qty_sold: int
 
 class CheckoutRequest(BaseModel):
-    customer_id: int
+    user_id: int
     sale_date: date
     items: List[SaleItem]
 

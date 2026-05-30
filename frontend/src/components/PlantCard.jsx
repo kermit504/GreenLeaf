@@ -5,12 +5,14 @@ import { useCart } from "@/components/CartContext";
 
 const API_BASE = "http://127.0.0.1:8000";
 
-const PlantCard = ({ plant_id, plant_name, price, plant_image_url, stock_quantity }) => {
+const PlantCard = ({ plant_id, plant_name, price, plant_image_url, stock_quantity, care_requirements }) => {
   const { addToCart } = useCart();
   const [isClicked, setIsClicked] = useState(false);
 
   const isLowStock = stock_quantity > 0 && stock_quantity < 5;
   const isOutOfStock = stock_quantity === 0;
+
+  const care = care_requirements && care_requirements.length > 0 ? care_requirements[0] : null;
 
   const fullImageUrl = plant_image_url?.startsWith("http")
     ? plant_image_url
@@ -42,7 +44,7 @@ const PlantCard = ({ plant_id, plant_name, price, plant_image_url, stock_quantit
           />
 
           <div className="absolute top-3 left-3 px-3 py-1.5 rounded-lg bg-emerald-500 text-white font-bold text-lg shadow-xl">
-            ${price.toFixed(2)}
+            ₹{price.toFixed(2)}
           </div>
 
           <div
@@ -77,6 +79,17 @@ const PlantCard = ({ plant_id, plant_name, price, plant_image_url, stock_quantit
           <h3 className="text-2xl font-bold text-white tracking-tight group-hover:text-emerald-400 transition-colors uppercase">
             {plant_name}
           </h3>
+          
+          {care && (
+            <div className="mt-3 flex flex-wrap gap-2">
+              <span className="text-[10px] uppercase font-black bg-zinc-950 text-zinc-400 px-2.5 py-1 rounded border border-white/5 tracking-wider">
+                <span className="text-white">Sunlight requirements:</span> {care.sunlight_requirement}
+              </span>
+              <span className="text-[10px] uppercase font-black bg-zinc-950 text-zinc-400 px-2.5 py-1 rounded border border-white/5 tracking-wider">
+                <span className="text-white">Soil type:</span> {care.soil_type}
+              </span>
+            </div>
+          )}
         </div>
       </div>
     </BorderGlow>

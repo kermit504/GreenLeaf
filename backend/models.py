@@ -83,7 +83,7 @@ class Sales(Base):
 
     sale_id = Column(Integer, primary_key=True, index=True)
     plant_id = Column(Integer, ForeignKey("plants.plant_id"), nullable=False)
-    customer_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
     qty_sold = Column(Integer, nullable=False)
     sale_date = Column(Date, nullable=False)
 

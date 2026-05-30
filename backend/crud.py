@@ -2,6 +2,7 @@ import models, schemas
 from sqlalchemy.orm import Session 
 from fastapi import HTTPException
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import joinedload
 
 def create_category(db: Session, category: schemas.CategoryCreate):
     try:
@@ -29,7 +30,7 @@ def create_plant(db: Session, plant: schemas.PlantCreate):
         raise HTTPException(status_code=400, detail="Plant creation failed. Check if Category ID exists.")
 
 def get_plants(db: Session, category_id: int = None):
-    query = db.query(models.Plant)
+    query = db.query(models.Plant).options(joinedload(models.Plant.care_requirements))
     if category_id:
         query = query.filter(models.Plant.category_id == category_id)
     return query.all()
@@ -77,7 +78,7 @@ def process_checkout(db: Session, checkout: schemas.CheckoutRequest):
             
             db_sale = models.Sales(
                 plant_id=item.plant_id,
-                customer_id=checkout.customer_id,
+                user_id=checkout.user_id,
                 qty_sold=item.qty_sold,
                 sale_date=checkout.sale_date
             )
@@ -133,3 +134,54 @@ def create_purchase(db: Session, purchase: schemas.PurchasesCreate):
     except IntegrityError:
         db.rollback()
         raise HTTPException(status_code=400, detail="Purchase record failed. Check Plant/Supplier IDs.")
+    
+    # for put endpont:
+def update_plant(db: Session, plant_id: int, plant: schemas.PlantCreate):
+    db_plant = db.query(models.Plant).filter(models.Plant.plant_id == plant_id).first()
+    if not db_plant:
+        raise HTTPException(status_code=404, detail="Plant specimen not found")
+        
+    for key, value in plant.model_dump().items():
+        setattr(db_plant, key, value)
+        
+    try:
+        db.commit()
+        db.refresh(db_plant)
+        return db_plant
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=400, detail="Update failed. Check related IDs.")
+
+def update_care_requirements(db: Session, plant_id: int, care: schemas.CareRequirementsCreate):
+    db_care = db.query(models.Care_Requirements).filter(models.Care_Requirements.plant_id == plant_id).first()
+    
+    if not db_care:
+        db_care = models.Care_Requirements(**care.model_dump(), plant_id=plant_id)
+        db.add(db_care)
+    else:
+        for key, value in care.model_dump().items():
+            setattr(db_care, key, value)
+            
+    try:
+        db.commit()
+        db.refresh(db_care)
+        return db_care
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=400, detail="Care requirement update details invalid.")
+    
+def update_category(db: Session, category_id: int, category: schemas.CategoryCreate):
+    db_category = db.query(models.Category).filter(models.Category.category_id == category_id).first()
+    if not db_category:
+        raise HTTPException(status_code=404, detail="Category not found")
+        
+    for key, value in category.model_dump().items():
+        setattr(db_category, key, value)
+        
+    try:
+        db.commit()
+        db.refresh(db_category)
+        return db_category
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=400, detail="Category update failed. Data naming collision or integrity block.")
